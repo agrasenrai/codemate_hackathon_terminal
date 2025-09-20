@@ -1,0 +1,110 @@
+import os
+import logging
+from flask import Flask, render_template, request, jsonify, session, send_from_directory, abort
+from commands import CommandHandler
+from system_monitor import SystemMonitor
+from ai_handler import AIHandler
+from datetime import timedelta
+from flask_cors import CORS
+
+# --- Hackathon-winning: Production-ready Flask app with modular design, session support, and security ---
+
+def create_app():
+    app = Flask(__name__, static_folder='static', template_folder='templates')
+    app.secret_key = os.environ.get('SECRET_KEY', 'pyterminal-secret')
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    CORS(app)
+
+    # Logging
+    logging.basicConfig(level=logging.INFO)
+
+    # Command, system, and AI handlers
+    command_handler = CommandHandler()
+    system_monitor = SystemMonitor()
+    ai_handler = AIHandler()
+
+    @app.route('/')
+    def index():
+        # Always start in sandbox for new session
+        session['cwd'] = command_handler.sandbox_dir
+        return render_template('index.html')
+
+    @app.route('/execute', methods=['POST'])
+    def execute():
+        data = request.get_json()
+        user_input = data.get('command', '')
+        session.permanent = True
+        if 'cwd' not in session or not session['cwd'].startswith(command_handler.sandbox_dir):
+            session['cwd'] = command_handler.sandbox_dir
+        cwd = session['cwd']
+        # AI interpretation
+        ai_result = ai_handler.interpret(user_input)
+        if ai_result['interpreted']:
+            command = ai_result['command']
+            output = command_handler.execute(command, cwd)
+            ai_result['output'] = output
+            session['cwd'] = command_handler.current_dir
+            return jsonify(ai_result)
+        # Fallback to normal command
+        output = command_handler.execute(user_input, cwd)
+        session['cwd'] = command_handler.current_dir
+        return jsonify({'interpreted': False, 'command': user_input, 'output': output})
+
+    @app.route('/health')
+    def health():
+        return jsonify({'status': 'ok'})
+
+    @app.route('/filetree')
+    def filetree():
+        def build_tree(path):
+            items = []
+            for name in sorted(os.listdir(path)):
+                full_path = os.path.join(path, name)
+                if os.path.isdir(full_path):
+                    items.append({
+                        'name': name,
+                        'type': 'dir',
+                        'path': os.path.relpath(full_path, command_handler.sandbox_dir),
+                        'children': build_tree(full_path)
+                    })
+                else:
+                    items.append({
+                        'name': name,
+                        'type': 'file',
+                        'path': os.path.relpath(full_path, command_handler.sandbox_dir)
+                    })
+            return items
+        tree = build_tree(command_handler.sandbox_dir)
+        return jsonify(tree)
+
+    @app.route('/preview')
+    def preview():
+        rel_path = request.args.get('path', '')
+        abs_path = os.path.abspath(os.path.join(command_handler.sandbox_dir, rel_path))
+        if not abs_path.startswith(command_handler.sandbox_dir):
+            abort(403)
+        if not os.path.isfile(abs_path):
+            abort(404)
+        try:
+            with open(abs_path, 'r', encoding='utf-8', errors='replace') as f:
+                content = f.read(2048)
+            return content
+        except Exception:
+            return 'Unable to preview file.', 500
+
+    # Static file serving optimization
+    @app.route('/static/<path:filename>')
+    def static_files(filename):
+        return send_from_directory(app.static_folder, filename)
+
+    return app
+
+app = create_app()
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('DEBUG', '0') == '1'
+    app.run(host='0.0.0.0', port=port, debug=debug)

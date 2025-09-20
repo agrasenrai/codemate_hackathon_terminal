@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTerminal - VS Code Style</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="vscode-container">
+    <button id="help-btn" class="help-btn" title="Show all commands">?</button>
+    <div id="help-modal" class="help-modal" style="display:none;">
+      <div class="help-modal-content">
+        <span class="close-help" id="close-help">&times;</span>
+        <h2>Available Commands</h2>
+        <pre class="help-commands">
+pwd                   # show current directory (Linux/macOS)
+cd &lt;folder&gt;           # change directory
+cd ..                 # go back one level
+ls                    # list files (Linux/macOS)
+ls -l                 # detailed list (Linux/macOS)
+dir                   # list files (Windows)
+mkdir &lt;name&gt;          # make directory
+md &lt;name&gt;             # make directory (Windows alternative)
+touch &lt;file&gt;          # create empty file
+echo 'text' &gt; file    # write text to file
+rm &lt;file&gt;             # delete file (Linux/macOS)
+del &lt;file&gt;            # delete file (Windows)
+rm -r &lt;folder&gt;        # delete folder (Linux/macOS)
+rmdir &lt;folder&gt;        # delete folder (Windows)
+cp a.txt b.txt        # copy file
+copy a.txt b.txt      # copy file (Windows alternative)
+mv a.txt b.txt        # move/rename (Linux/macOS)
+move a.txt b.txt      # move/rename (Windows alternative)
+cat file.txt          # show file contents (Linux/macOS)
+type file.txt         # show file contents (Windows)
+head file.txt         # show first 10 lines
+tail file.txt         # show last 10 lines
+wc file.txt           # count lines/words/chars
+grep pattern file.txt # search for pattern in file
+find . -name pattern  # search files by name
+tree                  # show directory tree
+nano file.txt         # edit file (Linux/macOS)
+open file.txt         # open file (macOS)
+open .                # open Finder (macOS)
+
+whoami                # current user
+hostname              # computer name
+uname -a              # system details (Linux/macOS)
+sw_vers               # macOS version
+systeminfo            # Windows system details
+df -h                 # disk usage (Linux/macOS)
+free -h               # memory usage (Linux/macOS)
+echo $PATH            # show PATH variable (Linux/macOS)
+echo %PATH%           # show PATH variable (Windows)
+date                  # show current date/time
+clear                 # clear terminal
+
+ps aux                # list processes (Linux/macOS)
+tasklist              # list processes (Windows)
+top                   # live process monitor (Linux/macOS)
+htop                  # better process monitor (if installed, Linux/macOS)
+kill &lt;pid&gt;            # kill process (Linux/macOS)
+taskkill /PID &lt;id&gt; /F # kill process (Windows)
+
+ping google.com       # test connection
+ifconfig              # show IP info (Linux/macOS)
+ip a                  # modern Linux IP info
+ipconfig              # show IP info (Windows)
+netstat -an           # network connections (all OS)
+netstat -tulpn        # open ports (Linux)
+ss -tulpn             # modern Linux open ports
+Get-NetTCPConnection  # PowerShell: list open ports (Windows)
+lsof -i -P -n | grep LISTEN  # open ports (Linux/macOS)
+        </pre>
+      </div>
+    </div>
+    <div class="vscode-sidebar">
+      <div class="sidebar-header">EXPLORER</div>
+      <ul id="file-tree" class="vscode-filetree"></ul>
+    </div>
+    <div class="vscode-main">
+      <div class="vscode-tabs" id="tab-bar"></div>
+      <div class="vscode-preview" id="file-preview"></div>
+      <div class="vscode-terminal-panel" id="terminal-panel">
+        <div class="terminal-header">TERMINAL</div>
+        <div class="terminal-body" id="terminal-body"></div>
+        <div class="terminal-input-row">
+          <span class="terminal-prompt">user@pyterminal:<span id="cwd">~</span>$</span>
+          <input class="terminal-input" id="terminal-input" autocomplete="off" autofocus spellcheck="false" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/static/terminal.js"></script>
+</body>
+</html>
