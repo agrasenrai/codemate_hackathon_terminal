@@ -36,22 +36,36 @@ def create_app():
     def execute():
         data = request.get_json()
         user_input = data.get('command', '')
+        ai_mode = data.get('ai', False)
+        print(f"[DEBUG] /execute called. AI mode: {ai_mode}, input: {user_input}")
         session.permanent = True
         if 'cwd' not in session or not session['cwd'].startswith(command_handler.sandbox_dir):
             session['cwd'] = command_handler.sandbox_dir
         cwd = session['cwd']
-        # AI interpretation
-        ai_result = ai_handler.interpret(user_input)
-        if ai_result['interpreted']:
-            command = ai_result['command']
-            output = command_handler.execute(command, cwd)
-            ai_result['output'] = output
+        if ai_mode:
+            ai_result = ai_handler.interpret(user_input)
+            print(f"[DEBUG] AIHandler result: {ai_result}")
+            if ai_result['interpreted'] and 'commands' in ai_result:
+                outputs = []
+                for cmd in ai_result['commands']:
+                    print(f"[DEBUG] Executing AI command: {cmd}")
+                    out = command_handler.execute(cmd, cwd)
+                    print(f"[DEBUG] Output: {out}")
+                    outputs.append(f"$ {cmd}\n{out}")
+                    session['cwd'] = command_handler.current_dir
+                    cwd = session['cwd']
+                ai_result['output'] = '\n\n'.join(outputs)
+                return jsonify(ai_result)
+            # AI failed to interpret
+            output = command_handler.execute(user_input, cwd)
+            print(f"[DEBUG] AI fallback output: {output}")
             session['cwd'] = command_handler.current_dir
-            return jsonify(ai_result)
-        # Fallback to normal command
-        output = command_handler.execute(user_input, cwd)
-        session['cwd'] = command_handler.current_dir
-        return jsonify({'interpreted': False, 'command': user_input, 'output': output})
+            return jsonify({'interpreted': False, 'command': user_input, 'output': output})
+        else:
+            output = command_handler.execute(user_input, cwd)
+            print(f"[DEBUG] Direct command output: {output}")
+            session['cwd'] = command_handler.current_dir
+            return jsonify({'interpreted': False, 'command': user_input, 'output': output})
 
     @app.route('/health')
     def health():

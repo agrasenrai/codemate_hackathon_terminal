@@ -4,6 +4,7 @@ import tempfile
 import re
 from datetime import datetime
 from system_monitor import SystemMonitor
+import platform
 
 # --- Hackathon-winning: Safe sandbox, realistic demo files, cross-platform commands, robust error handling ---
 
@@ -96,12 +97,11 @@ class CommandHandler:
             elif cmd == 'whoami':
                 return os.environ.get('USER', os.environ.get('USERNAME', 'user'))
             elif cmd == 'hostname':
-                return os.uname().nodename if hasattr(os, 'uname') else platform.node()
+                return platform.node()
             elif cmd == 'uname':
                 if '-a' in arg:
-                    import platform
                     return str(platform.uname())
-                return 'Linux'
+                return platform.system()
             elif cmd == 'sw_vers':
                 return 'ProductName: macOS\nProductVersion: Simulated\nBuildVersion: Simulated'
             elif cmd == 'systeminfo':
@@ -214,9 +214,16 @@ class CommandHandler:
     def _mkdir(self, arg):
         if not arg:
             return 'Usage: mkdir <folder>'
-        path = self._safe_path(arg)
+        # Remove -p if present (AI compatibility)
+        parts = arg.split()
+        if '-p' in parts:
+            parts.remove('-p')
+        folder = ' '.join(parts).strip()
+        if not folder:
+            return 'Usage: mkdir <folder>'
+        path = self._safe_path(folder)
         os.makedirs(path, exist_ok=True)
-        return f'Directory created: {arg}'
+        return f'Directory created: {folder}'
 
     def _rm(self, arg, recursive=False):
         if not arg:

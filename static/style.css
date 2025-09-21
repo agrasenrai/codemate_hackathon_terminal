@@ -226,6 +226,27 @@ body {
   margin-top: 12px;
   max-height: 50vh;
 }
+.ai-toggle {
+  margin-left: 10px;
+  background: #23272e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+}
+.ai-toggle.active {
+  background: #2ecc40;
+  color: #fff;
+  box-shadow: 0 0 0 2px #2ecc40aa;
+}
+.ai-toggle:focus {
+  outline: 2px solid #2ecc40;
+}
 @media (max-width: 700px) {
   .vscode-container { flex-direction: column; }
   .vscode-sidebar { width: 100%; min-width: 0; max-width: none; border-right: none; border-bottom: 1px solid #222; }

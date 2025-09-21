@@ -4,6 +4,7 @@ let historyIdx = -1;
 let executedCommands = [];
 let openTabs = [];
 let activeTab = null;
+let aiMode = false;
 
 function addOutput(text) {
   const output = document.createElement('div');
@@ -15,6 +16,19 @@ function addOutput(text) {
   output.textContent = text;
   document.getElementById('terminal-body').appendChild(output);
   document.getElementById('terminal-body').scrollTop = document.getElementById('terminal-body').scrollHeight;
+}
+
+function setAiMode(on) {
+  aiMode = on;
+  const btn = document.getElementById('ai-toggle');
+  if (aiMode) {
+    btn.classList.add('active');
+    btn.textContent = 'AI ON';
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = 'AI OFF';
+  }
+  localStorage.setItem('aiMode', aiMode ? '1' : '0');
 }
 
 function handleInput(e) {
@@ -30,7 +44,7 @@ function handleInput(e) {
     fetch('/execute', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command: cmd })
+      body: JSON.stringify({ command: cmd, ai: aiMode })
     })
     .then(res => res.json())
     .then(data => {
@@ -212,4 +226,10 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') helpModal.style.display = 'none';
   });
+
+  // AI toggle logic
+  const aiBtn = document.getElementById('ai-toggle');
+  aiBtn.onclick = () => setAiMode(!aiMode);
+  // Restore AI mode from localStorage
+  setAiMode(localStorage.getItem('aiMode') === '1');
 });
