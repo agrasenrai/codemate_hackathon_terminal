@@ -42,6 +42,11 @@ class SystemMonitor:
         mem = psutil.virtual_memory()
         return f"Memory: {mem.total // (1024**2)}MB total, {mem.available // (1024**2)}MB available ({mem.percent}% used)"
 
+    def get_stats(self):
+        cpu = psutil.cpu_percent(interval=0.1)
+        mem = psutil.virtual_memory().percent
+        return {'cpu': cpu, 'mem': mem}
+
     def _uptime(self):
         boot = datetime.fromtimestamp(psutil.boot_time())
         return str(datetime.now() - boot).split('.')[0]

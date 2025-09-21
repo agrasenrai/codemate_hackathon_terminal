@@ -109,6 +109,30 @@ def create_app():
         except Exception:
             return 'Unable to preview file.', 500
 
+    @app.route('/ai_suggest', methods=['POST'])
+    def ai_suggest():
+        data = request.get_json()
+        user_input = data.get('input', '')
+        ai_result = ai_handler.interpret(user_input)
+        print(f"[DEBUG] /ai_suggest input: {user_input}, ai_result: {ai_result}")
+        suggestion = ''
+        if ai_result.get('interpreted') and ai_result.get('commands'):
+            suggestion = ai_result['commands'][0]
+        return jsonify({'suggestion': suggestion})
+
+    @app.route('/ai_prompt_suggest', methods=['POST'])
+    def ai_prompt_suggest():
+        data = request.get_json()
+        user_input = data.get('input', '')
+        suggestion = ai_handler.prompt_completion(user_input)
+        print(f"[DEBUG] /ai_prompt_suggest input: {user_input}, suggestion: {suggestion}")
+        return jsonify({'suggestion': suggestion})
+
+    @app.route('/sysstats')
+    def sysstats():
+        stats = system_monitor.get_stats()
+        return jsonify(stats)
+
     # Static file serving optimization
     @app.route('/static/<path:filename>')
     def static_files(filename):

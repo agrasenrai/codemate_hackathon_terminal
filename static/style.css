@@ -135,32 +135,65 @@ body {
 .terminal-body {
   flex: 1 1 auto;
   overflow-y: auto;
-  padding: 8px 10px;
-  font-size: 13px;
+  padding: 12px 16px 0 16px;
+  font-size: 1em;
   background: #181818;
   color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
 }
-.terminal-input-row {
+.terminal-output {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 2px;
+  font-family: inherit;
+  font-size: 1em;
+}
+.terminal-vscode-input-row {
   display: flex;
   align-items: center;
-  padding: 6px 12px;
+  padding: 8px 16px 12px 16px;
   background: #181818;
-  border-top: 1px solid #222;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  font-size: 1em;
+  gap: 0.5em;
 }
 .terminal-prompt {
   color: #6ee;
   font-weight: bold;
-  margin-right: 6px;
-  font-size: 13px;
+  margin-right: 8px;
+  font-family: inherit;
 }
 .terminal-input {
-  background: #181818;
+  background: transparent;
   border: none;
   color: #e0e0e0;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 1em;
   outline: none;
   flex: 1;
+  min-width: 0;
+}
+.input-ghost-wrapper {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+#inline-autocomplete {
+  pointer-events: none;
+  user-select: none;
+  font-style: italic;
+  color: #b5cea888;
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: pre;
+  z-index: 1;
 }
 .help-btn {
   position: fixed;
@@ -227,7 +260,7 @@ body {
   max-height: 50vh;
 }
 .ai-toggle {
-  margin-left: 10px;
+  margin-left: auto;
   background: #23272e;
   color: #fff;
   border: none;
@@ -246,6 +279,76 @@ body {
 }
 .ai-toggle:focus {
   outline: 2px solid #2ecc40;
+}
+.vscode-terminal-tabs {
+  display: flex;
+  align-items: flex-end;
+  background: #23272e;
+  border-bottom: 1px solid #222;
+  min-height: 32px;
+  padding-left: 8px;
+  gap: 2px;
+}
+.terminal-tab {
+  padding: 6px 18px 6px 10px;
+  background: #23272e;
+  color: #d4d4d4;
+  border: 1px solid #23272e;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  margin-right: 2px;
+  cursor: pointer;
+  position: relative;
+  font-size: 0.98em;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s, color 0.2s;
+}
+.terminal-tab.active {
+  background: #1e1e1e;
+  color: #fff;
+  border: 1px solid #222;
+  border-bottom: 1px solid #1e1e1e;
+}
+.terminal-tab .close-term {
+  margin-left: 8px;
+  color: #888;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: color 0.2s;
+}
+.terminal-tab .close-term:hover {
+  color: #ff5f56;
+}
+.new-terminal-btn {
+  background: #23272e;
+  color: #b5cea8;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 1.2em;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  margin-left: 4px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.new-terminal-btn:hover {
+  background: #2a2d32;
+  color: #fff;
+}
+.sys-status-bar {
+  background: #23272e;
+  color: #b5cea8;
+  font-size: 1em;
+  padding: 6px 18px;
+  border-top: 1px solid #222;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px #0002;
 }
 @media (max-width: 700px) {
   .vscode-container { flex-direction: column; }

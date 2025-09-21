@@ -42,6 +42,16 @@ class CommandHandler:
     def execute(self, command, cwd=None):
         self.current_dir = cwd or self.sandbox_dir
         try:
+            # Minimal support for 'ls -l | grep ...'
+            if '|' in command:
+                left, right = [x.strip() for x in command.split('|', 1)]
+                if right.startswith('grep '):
+                    pattern = right[5:].strip().strip('"\'')
+                    left_output = self.execute(left, self.current_dir)
+                    filtered = '\n'.join([line for line in left_output.split('\n') if pattern in line])
+                    return filtered if filtered else '[No matches]'
+                else:
+                    return 'Only simple pipes with grep are supported (e.g., ls -l | grep pattern).'
             # Handle echo with > for file writing
             if command.strip().startswith('echo') and '>' in command:
                 parts = command.split('>')
@@ -243,14 +253,31 @@ class CommandHandler:
 
     def _cp(self, arg):
         parts = arg.split()
-        if len(parts) != 2:
-            return 'Usage: cp <src> <dst>'
-        src = self._safe_path(parts[0])
-        dst = self._safe_path(parts[1])
-        if os.path.isdir(src):
-            return 'Copying directories is not supported.'
-        shutil.copy2(src, dst)
-        return f'Copied {parts[0]} to {parts[1]}'
+        if not parts:
+            return 'Usage: cp <src> <dst> or cp -r <src_dir> <dst_dir>'
+        if parts[0] == '-r' and len(parts) == 3:
+            src = self._safe_path(parts[1])
+            dst = self._safe_path(parts[2])
+            if not os.path.isdir(src):
+                return 'Source must be a directory for cp -r.'
+            if os.path.exists(dst):
+                return 'Destination already exists.'
+            try:
+                import shutil
+                shutil.copytree(src, dst)
+                return f'Recursively copied {parts[1]} to {parts[2]}'
+            except Exception as e:
+                return f'Error copying directory: {e}'
+        elif len(parts) == 2:
+            src = self._safe_path(parts[0])
+            dst = self._safe_path(parts[1])
+            if os.path.isdir(src):
+                return 'Use cp -r to copy directories.'
+            import shutil
+            shutil.copy2(src, dst)
+            return f'Copied {parts[0]} to {parts[1]}'
+        else:
+            return 'Usage: cp <src> <dst> or cp -r <src_dir> <dst_dir>'
 
     def _mv(self, arg):
         parts = arg.split()

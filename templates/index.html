@@ -82,14 +82,26 @@ lsof -i -P -n | grep LISTEN  # open ports (Linux/macOS)
     <div class="vscode-main">
       <div class="vscode-tabs" id="tab-bar"></div>
       <div class="vscode-preview" id="file-preview"></div>
+      <div class="vscode-terminal-tabs" id="terminal-tabs">
+        <div class="terminal-tab active" data-term="1">Terminal 1 <span class="close-term" title="Close">×</span></div>
+        <button id="new-terminal-btn" class="new-terminal-btn" title="New Terminal">+</button>
+      </div>
       <div class="vscode-terminal-panel" id="terminal-panel">
         <div class="terminal-header">TERMINAL</div>
         <div class="terminal-body" id="terminal-body"></div>
-        <div class="terminal-input-row">
+        <!-- VS Code style: input is at the end of the terminal body, not in a separate box -->
+        <div class="terminal-vscode-input-row" id="terminal-vscode-input-row">
           <span class="terminal-prompt">user@pyterminal:<span id="cwd">~</span>$</span>
-          <input class="terminal-input" id="terminal-input" autocomplete="off" autofocus spellcheck="false" />
+          <span class="input-ghost-wrapper" style="position:relative;display:inline-block;width:100%;">
+            <input class="terminal-input" id="terminal-input" autocomplete="off" autofocus spellcheck="false" style="background:transparent;position:relative;z-index:2;width:100%;" />
+            <span id="inline-autocomplete" style="position:absolute;left:8px;top:0;z-index:1;color:#b5cea888;font-style:italic;pointer-events:none;user-select:none;white-space:pre;"></span>
+          </span>
           <button id="ai-toggle" class="ai-toggle" title="Toggle AI mode">AI</button>
         </div>
+      </div>
+      <div class="sys-status-bar" id="sys-status-bar">
+        <span>CPU: <span id="sys-cpu">0%</span></span>
+        <span style="margin-left:24px;">Memory: <span id="sys-mem">0%</span></span>
       </div>
     </div>
   </div>
