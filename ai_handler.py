@@ -3,11 +3,9 @@ import requests
 import os
 from datetime import datetime
 
-# Gemini API Key (replace with your own or use env var)
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyBIJg61XLCup4_yGOqO2NT6aYtdrCFiZxA')
 GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
 
-# List of supported commands for context
 SUPPORTED_COMMANDS = [
     'pwd', 'cd', 'ls', 'ls -l', 'dir', 'mkdir', 'md', 'touch', 'echo', 'echo >', 'rm', 'del', 'rm -r', 'rmdir',
     'cp', 'copy', 'mv', 'move', 'cat', 'type', 'head', 'tail', 'wc', 'grep', 'find', 'tree', 'nano', 'open',
@@ -48,7 +46,6 @@ class AIHandler:
             print(f"[AIHandler] [DEBUG] Gemini API response text: {resp.text}")
             resp.raise_for_status()
             data = resp.json()
-            # Parse Gemini response for commands
             commands = []
             try:
                 parts = data['candidates'][0]['content']['parts']
@@ -58,11 +55,9 @@ class AIHandler:
                         line = line.strip()
                         if not line:
                             continue
-                        # Filter forbidden constructs
                         if any(f in line for f in FORBIDDEN):
                             print(f"[AIHandler] [WARN] Forbidden shell construct in: {line}")
                             continue
-                        # Only allow supported commands
                         if not any(line.startswith(cmd.split()[0]) for cmd in SUPPORTED_COMMANDS):
                             print(f"[AIHandler] [WARN] Unsupported command: {line}")
                             continue
@@ -80,7 +75,6 @@ class AIHandler:
             return {'interpreted': False, 'commands': [], 'input': text, 'suggestion': f'AI error: {e}'}
 
     def prompt_completion(self, text):
-        # Compose prompt for Gemini prompt completion
         prompt = (
             "You are an AI assistant for a web-based terminal. "
             "Given a partial user request, suggest a likely full natural language prompt the user might want to type. "

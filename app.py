@@ -7,7 +7,6 @@ from ai_handler import AIHandler
 from datetime import timedelta
 from flask_cors import CORS
 
-# --- Hackathon-winning: Production-ready Flask app with modular design, session support, and security ---
 
 def create_app():
     app = Flask(__name__, static_folder='static', template_folder='templates')

@@ -609,4 +609,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTerminalTabs();
   renderTerminalSession();
   pollSysStats();
+
+  // Auto-open documents/readme.txt on load
+  setTimeout(() => {
+    openFileTab({ name: 'readme.txt', path: 'documents/readme.txt' });
+  }, 1000);
 });

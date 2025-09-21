@@ -6,7 +6,6 @@ from datetime import datetime
 from system_monitor import SystemMonitor
 import platform
 
-# --- Hackathon-winning: Safe sandbox, realistic demo files, cross-platform commands, robust error handling ---
 
 class CommandHandler:
     def __init__(self):
@@ -21,7 +20,24 @@ class CommandHandler:
         os.makedirs(os.path.join(self.sandbox_dir, 'projects'), exist_ok=True)
         os.makedirs(os.path.join(self.sandbox_dir, 'logs'), exist_ok=True)
         with open(os.path.join(self.sandbox_dir, 'documents', 'readme.txt'), 'w') as f:
-            f.write('Welcome to PyTerminal!\nThis is a sample text file.')
+            f.write(
+                "Welcome to PyTerminal!\n"
+                "\n"
+                "Author: Agrasen Rai\n"
+                "College: SRMIST\n"
+                "Registration No.: RA2211003010604\n"
+                "Mail: ar8546@srmist.edu.in\n"
+                "\n"
+                "Try these features:\n"
+                "- Classic commands: ls, cd, mkdir, rm, cat, etc.\n"
+                "- AI mode: natural language queries (\"create a folder called demo and move all .txt files into it\")\n"
+                "- File explorer: click to preview files\n"
+                "- Multi-terminal: open/switch/close tabs\n"
+                "- System monitor: see CPU/memory below\n"
+                "- Help: click ? for all commands\n"
+                "\n"
+            )
+
         with open(os.path.join(self.sandbox_dir, 'projects', 'example.py'), 'w') as f:
             f.write('# Example Python file\nprint("Hello, world!")')
         with open(os.path.join(self.sandbox_dir, 'logs', 'system.log'), 'w') as f:

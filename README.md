@@ -1,50 +1,63 @@
-# PyTerminal: AI-Powered Web Terminal
+# PyTerminal: AI-Powered VS Code-Style Web Terminal
 
-## Overview
-PyTerminal is a production-ready, web-based Python terminal with AI-powered natural language command interpretation. Designed for hackathons, education, and demos, it features a professional terminal UI, real-time system monitoring, and safe sandboxed command execution.
+**Author:** Agrasen Rai  
+**College:** SRMIST  
+**Registration No.:** RA2211003010604  
+**Mail ID:** ar8546@srmist.edu.in
 
-## Features
-- Realistic terminal UI (green/blue/amber themes, animations, mobile support)
-- AI natural language command processor (regex-based)
-- Safe file system operations in a sandbox
-- System monitoring (CPU, memory, disk, processes)
-- Command history, autocomplete, keyboard shortcuts
-- Multi-user session support
-- Production deployment (Railway/Render, Gunicorn)
+---
 
-## Quick Start
-1. Clone repo and install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Run locally:
-   ```bash
-   flask run
-   ```
-3. Deploy to Railway/Render (Procfile/runtime.txt included)
+Terminal and sandbox enviroment live link : https://codemate-hackathon-terminal.onrender.com/;
 
-## Demo Script
-1. Open the live URL. Admire the animated ASCII art and welcome message.
-2. Try basic commands: `ls`, `cd documents`, `cat readme.txt`, `mkdir demo`.
-3. Use AI: Type "show me all files", "create folder called demo", "go to projects".
-4. Run system commands: `sysinfo`, `top`, `ps`, `df`, `free`.
-5. Showcase error handling: invalid commands, permission denied, file not found.
-6. Switch themes, use keyboard shortcuts (Ctrl+L, Ctrl+C), and demo mobile view.
+## 🚀 Project Overview
+PyTerminal is a full-stack, production-ready, AI-powered web terminal. It is designed for demos, and real-world use, with a focus on extensibility, security, and a beautiful user experience.
 
-## Hackathon-Winning Highlights
-- Stunning, animated terminal UI with pro polish
-- AI-powered command interpretation (regex, suggestions, logging)
-- Real system monitoring and safe sandboxed execution
-- Cross-platform, production-ready, and extensible
-- Comprehensive error handling and demo environment
+---
 
-## File Structure
-- `app.py` - Flask app and API
-- `commands.py` - CommandHandler (file ops, sandbox)
-- `system_monitor.py` - System stats and monitoring
-- `ai_handler.py` - AI natural language processor
-- `static/` - CSS, JS, images
-- `templates/` - HTML (Jinja2)
 
-## License
-MIT
+### 1. **Terminal UI**
+- Merged input/output: commands and results appear in a single scrollable area.
+- Sticky prompt at the bottom, just like VS Code.
+- Modern dark theme, rounded corners, subtle shadows, and responsive design.
+- Multi-terminal support: open, switch, and close multiple terminals (tab bar with “+” button).
+- Auto-scroll to bottom after every command.
+
+### 2. **Command Execution & History**
+- All classic shell commands supported: `ls`, `cd`, `pwd`, `mkdir`, `rm`, `cat`, `cp`, `mv`, `grep`, `find`, `tree`, etc.
+- Command history navigation with up/down arrows, persistent across sessions.
+- Inline autocompletion for commands and files, with best-match logic (case-insensitive, partial match, sorted by relevance).
+- Tab to accept suggestion (full prompt in AI mode, segment in classic mode).
+
+### 3. **AI-Powered Natural Language Terminal**
+- Toggle AI mode ON/OFF (sticky button at right of prompt).
+- When AI is ON:
+  - Copilot-style inline prompt suggestions as you type (from Gemini API).
+  - Enter natural language queries (e.g., “create a folder called test and move all .txt files into it”).
+  - Gemini interprets and returns only supported commands (pipes, code blocks, and unsupported flags are filtered out).
+  - Minimal support for `ls -l | grep ...` (runs left command, filters with grep).
+- When AI is OFF:
+  - Classic command templates and file suggestions only.
+
+### 4. **File Explorer & Preview**
+- Sidebar file explorer with collapsible folders, click to preview any file.
+- Tabbed file preview (like VS Code), open multiple files at once.
+- File tree auto-refreshes after every command.
+
+### 5. **System Monitor Bar**
+- Live CPU and memory usage bar below the terminal, updates every 2 seconds.
+
+### 6. **Sandboxed, Safe Environment**
+- All file operations are restricted to a secure sandbox (no path traversal).
+- Demo environment pre-populated with folders and files for instant use.
+
+### 7. **Production-Ready Backend**
+- Flask app with session support, CORS, error logging, and health check endpoint.
+- Gunicorn/Render/Railway deployment ready (Procfile, requirements.txt, runtime.txt included).
+- All commands and AI features are robustly error-handled.
+
+### 8. **Other Details**
+- Help modal (top right “?”) with all supported commands and usage.
+- Keyboard shortcuts: Ctrl+L (clear), Ctrl+C (interrupt), Tab (autocomplete), Up/Down (history).
+- Mobile responsive, touch-friendly.
+- All user state (AI mode, history, terminals) is persistent.
+
