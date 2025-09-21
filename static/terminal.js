@@ -1,3 +1,4 @@
+// Hackathon-winning: Real-time terminal UI, history, autocomplete, themes, typing effect, mobile support
 let history = [];
 let historyIdx = -1;
 let executedCommands = [];
@@ -602,9 +603,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // AI toggle logic
   const aiBtn = document.getElementById('ai-toggle');
+<<<<<<< Updated upstream
   aiBtn.onclick = () => setAiMode(!aiMode);
   // Restore AI mode from localStorage
   setAiMode(localStorage.getItem('aiMode') === '1');
+=======
+  aiBtn.onclick = () => {
+    setAiMode(!aiMode);
+    const aiArrowHint = document.getElementById('ai-arrow-hint');
+    if (aiArrowHint) aiArrowHint.style.display = 'none';
+  };
+  // Restore AI mode from localStorage
+  setAiMode(localStorage.getItem('aiMode') === '1');
+  // Hide AI arrow after 8 seconds if not clicked
+  const aiArrowHint = document.getElementById('ai-arrow-hint');
+  if (aiArrowHint) {
+    setTimeout(() => {
+      aiArrowHint.style.display = 'none';
+    }, 8000);
+  }
+>>>>>>> Stashed changes
   renderTerminalTabs();
   renderTerminalSession();
   pollSysStats();
