@@ -603,9 +603,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // AI toggle logic
   const aiBtn = document.getElementById('ai-toggle');
   aiBtn.onclick = () => setAiMode(!aiMode);
-  // Restore AI mode from localStorage, default ON if not set
-  const aiModeStored = localStorage.getItem('aiMode');
-  setAiMode(aiModeStored === null ? true : aiModeStored === '1');
+  // Restore AI mode from localStorage
+  setAiMode(localStorage.getItem('aiMode') === '1');
   renderTerminalTabs();
   renderTerminalSession();
   pollSysStats();
@@ -614,4 +613,15 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     openFileTab({ name: 'readme.txt', path: 'documents/readme.txt' });
   }, 1000);
+
+  // AI arrow hint logic
+  const aiArrowHint = document.getElementById('ai-arrow-hint');
+  if (aiBtn && aiArrowHint) {
+    aiBtn.addEventListener('click', () => {
+      aiArrowHint.style.display = 'none';
+    });
+    setTimeout(() => {
+      aiArrowHint.style.display = 'none';
+    }, 8000);
+  }
 });
