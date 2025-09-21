@@ -1,4 +1,3 @@
-// Hackathon-winning: Real-time terminal UI, history, autocomplete, themes, typing effect, mobile support
 let history = [];
 let historyIdx = -1;
 let executedCommands = [];
@@ -604,8 +603,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // AI toggle logic
   const aiBtn = document.getElementById('ai-toggle');
   aiBtn.onclick = () => setAiMode(!aiMode);
-  // Restore AI mode from localStorage
-  setAiMode(localStorage.getItem('aiMode') === '1');
+  // Restore AI mode from localStorage, default ON if not set
+  const aiModeStored = localStorage.getItem('aiMode');
+  setAiMode(aiModeStored === null ? true : aiModeStored === '1');
   renderTerminalTabs();
   renderTerminalSession();
   pollSysStats();
