@@ -1,4 +1,3 @@
-// Hackathon-winning: Real-time terminal UI, history, autocomplete, themes, typing effect, mobile support
 let history = [];
 let historyIdx = -1;
 let executedCommands = [];
