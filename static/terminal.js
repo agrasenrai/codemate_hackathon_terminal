@@ -4,7 +4,7 @@ let historyIdx = -1;
 let executedCommands = [];
 let openTabs = [];
 let activeTab = null;
-let aiMode = false;
+let aiMode = true;
 let inlineSuggestion = '';
 let aiSuggestTimeout = null;
 let lastAiSuggestInput = '';
@@ -24,7 +24,7 @@ function createTerminalSession() {
     historyIdx: 0,
     executedCommands: [],
     cwd: '~',
-    aiMode: aiMode,
+    aiMode: true,
     input: '',
   };
 }
@@ -605,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const aiBtn = document.getElementById('ai-toggle');
   aiBtn.onclick = () => setAiMode(!aiMode);
   // Restore AI mode from localStorage
-  setAiMode(localStorage.getItem('aiMode') === '1');
+  setAiMode(localStorage.getItem('aiMode') !== '0');
   renderTerminalTabs();
   renderTerminalSession();
   pollSysStats();
